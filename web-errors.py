@@ -38,6 +38,8 @@ def read_log_file(log_file):
         # Check if a minute has passed
         if abs(date_holder - error_datetime) > datetime.timedelta(minutes=1):
 
+            print("Time: " + str(error_datetime.replace(second=0)) + ". Errors (2xx, 3xx, 4xx, 5xx): " + str(errors))
+
             add_to_db(error_datetime.replace(second=0), errors)
             date_holder = error_datetime
 
@@ -56,8 +58,6 @@ def convert_to_time(input):
 
 def add_to_db(time, error):
 
-    print time
-    print error
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
     k = ({
@@ -73,6 +73,8 @@ def add_to_db(time, error):
 
 
 def main():
+
+    print("Apache errors")
     apache_log_file = "/var/log/apache2/access.log"
 
     read_log_file(apache_log_file)
